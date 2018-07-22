@@ -16,7 +16,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         hasCheckedStatus: true,
-        connected: isConnected(action.status),
+        isConnected: isConnected(action.status),
       };
     default:
       return state;
