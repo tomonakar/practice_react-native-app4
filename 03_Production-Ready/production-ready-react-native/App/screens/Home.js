@@ -14,12 +14,6 @@ import { changeNetworkStatus } from '../actions/network';
 import { changeCurrencyAmount, swapCurrency, getInitialConversion } from '../actions/currencies';
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-
-    this.props.dispatch(getInitialConversion());
-  }
-
   componentDidMount() {
     NetInfo.addEventListener('connectionChange', this.handleNetworkChange);
   }
@@ -36,6 +30,7 @@ class Home extends Component {
 
   handleNetworkChange = (info) => {
     this.props.dispatch(changeNetworkStatus(info.type));
+    this.props.dispatch(getInitialConversion());
   };
 
   handleChangeText = (text) => {
@@ -123,7 +118,7 @@ const mapStateToProps = (state) => {
     isFetching: conversionSelector.isFetching,
     primaryColor: state.theme.primaryColor,
     currencyError: state.currencies.error,
-    isConnected: state.network.isConnected,
+    isConnected: state.network.connected,
   };
 };
 

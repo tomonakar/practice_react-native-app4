@@ -12,6 +12,15 @@ export const getLatestRate = currency =>
   fetch(`https://fixer.handlebarlabs.com/latest?base=${currency}`);
 
 const fetchLatestConversionRates = function* ({ currency }) {
+  const { connected, hasCheckedStatus } = yield select(state => state.network);
+  if (!connected && hasCheckedStatus) {
+    yield put({
+      type: CONVERSION_ERROR,
+      error: 'インターネットに接続していません。変換比率が古いまたは有効でない可能性があります！',
+    });
+    return;
+  }
+
   try {
     let usedCurrency = currency;
     if (usedCurrency === undefined) {

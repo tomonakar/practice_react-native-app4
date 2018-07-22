@@ -1,13 +1,13 @@
 import { CHANGE_CONNECTION_STATUS } from '../actions/network';
 
-const isConnected = (status) => {
-  if (status.toLowerCase() === 'none') return false;
-  return true;
-};
-
 const initialState = {
   connected: false,
   hasCheckedStatus: false,
+};
+
+const isConnected = (status) => {
+  if (status.toLowerCase() === 'none') return false;
+  return true;
 };
 
 export default (state = initialState, action) => {
@@ -15,8 +15,8 @@ export default (state = initialState, action) => {
     case CHANGE_CONNECTION_STATUS:
       return {
         ...state,
+        connected: isConnected(action.status),
         hasCheckedStatus: true,
-        isConnected: isConnected(action.status),
       };
     default:
       return state;
