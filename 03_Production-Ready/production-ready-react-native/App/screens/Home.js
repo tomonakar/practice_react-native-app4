@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StatusBar, KeyboardAvoidingView } from 'react-native';
+import { StatusBar, KeyboardAvoidingView, NetInfo } from 'react-native';
 import { connect } from 'react-redux';
 
 import { Container } from '../components/Container';
@@ -9,6 +9,7 @@ import { ClearButton } from '../components/Button';
 import { LastConverted } from '../components/Text';
 import { Header } from '../components/Header';
 import { AlertConsumer } from '../components/Alert';
+import { changeNetworkStatus } from '../actions/network';
 
 import { changeCurrencyAmount, swapCurrency, getInitialConversion } from '../actions/currencies';
 
@@ -19,11 +20,23 @@ class Home extends Component {
     this.props.dispatch(getInitialConversion());
   }
 
+  componentDidMount() {
+    NetInfo.addEventListener('connectionChange', this.handleNetworkChange);
+  }
+
   componentDidUpdate() {
     if (this.props.currencyError) {
       this.props.alertWithType('error', 'Error', this.props.currencyError);
     }
   }
+
+  componentWillUnmount() {
+    NetInfo.removeEventListener('connectionChange', this.handleNetworkChange);
+  }
+
+  handleNetworkChange = (info) => {
+    this.props.dispatch(changeNetworkStatus(info.type));
+  };
 
   handleChangeText = (text) => {
     this.props.dispatch(changeCurrencyAmount(text));
